@@ -1,22 +1,27 @@
-*** Settings ***
-Library    SeleniumLibrary
-Suite Setup     Open Browser   ${url}     headlessfirefox
-Suite Teardown      Close Browser
-*** Variables ***
+***Settings***
+Library		Browser
+Suite Setup		Browser Setup
+***Variables***
 
-${url}    https://vm1376.kaj.pouta.csc.fi/index.php
-${default_colour}   white
+${HDR_COLOUR}	rgb(255, 255, 255)
+${WRP_COLOUR}	rgb(246, 246, 246)
 
-*** Test Cases ***
+***Test Cases***
 
-Colour check
-    Check background colour
+Check header colour
+	
+	${bg_colour} =	Get Style	xpath=//header[@id='header']/div[2]	background-color
+	Should Be True		'${bg_colour}' == '${HDR_COLOUR}'
+	
 
-*** Keywords ***
+Check wrapper colour
 
-Check background colour
+	${bg_colour} =	Get Style	css=#wrapper	background	#local variable, can use the same name as the 		previous one
+	Should Be True		'${bg_colour}' == '${WRP_COLOUR}'
 
-    ${bg_colour} =   Get Property    css=.header-top   background-colour
-    Log     ${bg_colour}
-    Should Be True      '${bg_colour}' == '${default_colour}'
+***Keywords***
+
+Browser Setup
+	New Browser		firefox
+	New Page	https://vm1376.kaj.pouta.csc.fi/index.php
 
